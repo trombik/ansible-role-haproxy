@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  roles:
+    - ansible-role-haproxy
+  vars:
+    haproxy_config: ""

@@ -1,0 +1,9 @@
+---
+haproxy_user: haproxy
+haproxy_group: haproxy
+haproxy_log_dir: /var/log/haproxy
+haproxy_db_dir: "{{ __haproxy_db_dir }}"
+haproxy_service: haproxy
+haproxy_conf_dir: "{{ __haproxy_conf_dir }}"
+haproxy_conf_file: "{{ __haproxy_conf_dir }}/haproxy.conf"
+haproxy_flags: ""

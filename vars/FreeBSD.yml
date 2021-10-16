@@ -1,0 +1,3 @@
+---
+__haproxy_db_dir: /var/db/haproxy
+__haproxy_conf_dir: /usr/local/etc/haproxy
