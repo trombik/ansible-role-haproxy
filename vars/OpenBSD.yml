@@ -1,0 +1,7 @@
+---
+__haproxy_user: _haproxy
+__haproxy_group: _haproxy
+__haproxy_service: haproxy
+__haproxy_conf_dir: /etc/haproxy
+__haproxy_package: haproxy
+__haproxy_chroot_dir: /var/haproxy

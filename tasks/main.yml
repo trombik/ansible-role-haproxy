@@ -1,37 +1,21 @@
 ---
 # tasks file for ansible-role-haproxy
 
-- include_vars: "{{ ansible_os_family }}.yml"
+- name: "Include {{ ansible_os_family }}.yml"
+  include_vars: "{{ ansible_os_family }}.yml"
 
-- include: "install-{{ ansible_os_family }}.yml"
-
-- name: Create log directory
-  file:
-    path: "{{ haproxy_log_dir }}"
-    mode: 0755
-    owner: "{{ haproxy_user }}"
-    group: "{{ haproxy_group }}"
-    state: directory
-  notify: Restart haproxy
-
-- name: Create db directory
-  file:
-    path: "{{ haproxy_db_dir }}"
-    mode: 0755
-    owner: "{{ haproxy_user }}"
-    group: "{{ haproxy_group }}"
-    state: directory
-  notify: Restart haproxy
+- name: "Include install-{{ ansible_os_family }}.yml"
+  include: "install-{{ ansible_os_family }}.yml"
 
 - name: Create haproxy.conf
-  template:
+  ansible.builtin.template:
     src: haproxy.conf.j2
     dest: "{{ haproxy_conf_file }}"
-    validate: echo %s
+    validate: haproxy -c -f %s
+    mode: "0644"
   notify: Restart haproxy
 
 - name: Start haproxy
-  service:
+  ansible.builtin.service:
     name: "{{ haproxy_service }}"
-    enabled: true
     state: started

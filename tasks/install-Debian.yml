@@ -1,21 +1,21 @@
 ---
 
 - name: Install haproxy
-  ansible.builtin.pkgng:
+  ansible.builtin.apt:
     name: "{{ haproxy_package }}"
+    policy_rc_d: 101
     state: present
 
 - name: Install haproxy_extra_packages
-  ansible.builtin.pkgng:
+  ansible.builtin.apt:
     name: "{{ haproxy_extra_packages }}"
     state: present
 
-- name: Create /etc/rc.conf.d/haproxy"
+- name: Create /etc/default/haproxy
   ansible.builtin.template:
-    src: FreeBSD.rc.j2
-    dest: "/etc/rc.conf.d/{{ haproxy_service }}"
+    src: Debian.default.j2
+    dest: "/etc/default/haproxy"
     mode: "0644"
-    validate: sh -n %s
   notify:
     - Restart haproxy
 

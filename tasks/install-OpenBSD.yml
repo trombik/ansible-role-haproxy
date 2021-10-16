@@ -1,25 +1,17 @@
 ---
 
 - name: Install haproxy
-  ansible.builtin.pkgng:
+  community.general.openbsd_pkg:
     name: "{{ haproxy_package }}"
     state: present
 
 - name: Install haproxy_extra_packages
-  ansible.builtin.pkgng:
+  community.general.openbsd_pkg:
     name: "{{ haproxy_extra_packages }}"
     state: present
-
-- name: Create /etc/rc.conf.d/haproxy"
-  ansible.builtin.template:
-    src: FreeBSD.rc.j2
-    dest: "/etc/rc.conf.d/{{ haproxy_service }}"
-    mode: "0644"
-    validate: sh -n %s
-  notify:
-    - Restart haproxy
 
 - name: Enable haproxy_service
   ansible.builtin.service:
     name: "{{ haproxy_service }}"
     enabled: yes
+    arguments: "{{ haproxy_flags }}"

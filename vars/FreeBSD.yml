@@ -1,3 +1,8 @@
 ---
-__haproxy_db_dir: /var/db/haproxy
-__haproxy_conf_dir: /usr/local/etc/haproxy
+__haproxy_user: www
+__haproxy_group: www
+__haproxy_service: haproxy
+__haproxy_conf_dir: /usr/local/etc
+__haproxy_package: haproxy
+__haproxy_log_dir: /var/log/haproxy
+__haproxy_chroot_dir: /var/haproxy
