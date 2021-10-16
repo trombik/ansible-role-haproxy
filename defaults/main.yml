@@ -1,13 +1,11 @@
 ---
 haproxy_user: "{{ __haproxy_user }}"
 haproxy_group: "{{ __haproxy_group }}"
-haproxy_log_dir: /var/log/haproxy
 haproxy_service: "{{ __haproxy_service }}"
 haproxy_package: "{{ __haproxy_package }}"
 haproxy_extra_packages: []
 haproxy_conf_dir: "{{ __haproxy_conf_dir }}"
 haproxy_conf_file: "{{ __haproxy_conf_dir }}/haproxy.cfg"
-haproxy_log_dir: "{{ __haproxy_log_dir }}"
 haproxy_config: ""
 haproxy_flags: ""
 haproxy_chroot_dir: "{{ __haproxy_chroot_dir }}"

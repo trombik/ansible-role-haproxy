@@ -6,129 +6,129 @@
     project_backend_host: 127.0.0.1
     project_backend_port: 8000
     os_haproxy_config:
-        FreeBSD: |
-          # FreeBSD package does not provide default
-          global
-            daemon
-            maxconn 4096
-            log /var/run/log local0 notice
-              user {{ haproxy_user }}
-              group {{ haproxy_group }}
-
-          defaults
-            log global
-            mode http
-            timeout connect 5s
-            timeout client 10s
-            timeout server 10s
-
-          frontend http-in
-            bind *:80
-            default_backend servers
-
-          backend servers
-            server server1 {{ project_backend_host }}:{{ project_backend_port }} maxconn 32 check
-
-          frontend stats
-            bind *:8404
-            mode http
-            no log
-            acl network_allowed src 127.0.0.0/8
-            tcp-request connection reject if !network_allowed
-            stats enable
-            stats uri /
-            stats refresh 10s
-            stats admin if LOCALHOST
-        Debian: |
-          global
-            log /dev/log  local0
-            log /dev/log  local1 notice
-            chroot {{ haproxy_chroot_dir }}
-            stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
-            stats timeout 30s
+      FreeBSD: |
+        # FreeBSD package does not provide default
+        global
+          daemon
+          maxconn 4096
+          log /var/run/log local0 notice
             user {{ haproxy_user }}
             group {{ haproxy_group }}
-            daemon
 
-            # Default SSL material locations
-            ca-base /etc/ssl/certs
-            crt-base /etc/ssl/private
+        defaults
+          log global
+          mode http
+          timeout connect 5s
+          timeout client 10s
+          timeout server 10s
 
-            # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
-              ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
-              ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
-              ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
+        frontend http-in
+          bind *:80
+          default_backend servers
 
-          defaults
-            log   global
-            mode  http
-            option    httplog
-            option    dontlognull
-              timeout connect 5000
-              timeout client  50000
-              timeout server  50000
-            errorfile 400 /etc/haproxy/errors/400.http
-            errorfile 403 /etc/haproxy/errors/403.http
-            errorfile 408 /etc/haproxy/errors/408.http
-            errorfile 500 /etc/haproxy/errors/500.http
-            errorfile 502 /etc/haproxy/errors/502.http
-            errorfile 503 /etc/haproxy/errors/503.http
-            errorfile 504 /etc/haproxy/errors/504.http
+        backend servers
+          server server1 {{ project_backend_host }}:{{ project_backend_port }} maxconn 32 check
 
-          frontend http-in
-            bind *:80
-            default_backend servers
+        frontend stats
+          bind *:8404
+          mode http
+          no log
+          acl network_allowed src 127.0.0.0/8
+          tcp-request connection reject if !network_allowed
+          stats enable
+          stats uri /
+          stats refresh 10s
+          stats admin if LOCALHOST
+      Debian: |
+        global
+          log /dev/log  local0
+          log /dev/log  local1 notice
+          chroot {{ haproxy_chroot_dir }}
+          stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+          stats timeout 30s
+          user {{ haproxy_user }}
+          group {{ haproxy_group }}
+          daemon
 
-          backend servers
-            server server1 {{ project_backend_host }}:{{ project_backend_port }} maxconn 32 check
+          # Default SSL material locations
+          ca-base /etc/ssl/certs
+          crt-base /etc/ssl/private
 
-          frontend stats
-            bind *:8404
-            mode http
-            no log
-            acl network_allowed src 127.0.0.0/8
-            tcp-request connection reject if !network_allowed
-            stats enable
-            stats uri /
-            stats refresh 10s
-            stats admin if LOCALHOST
-        OpenBSD: |
-          global
-            log 127.0.0.1   local0 debug
-            maxconn 1024
-            chroot {{ haproxy_chroot_dir }}
-            uid 604
-            gid 604
-            daemon
-            pidfile /var/run/haproxy.pid
+          # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
+            ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+            ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+            ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
 
-          defaults
-            log global
-            mode    http
-            option  httplog
-            option  dontlognull
-            option  redispatch
-            retries 3
-            maxconn 2000
+        defaults
+          log   global
+          mode  http
+          option    httplog
+          option    dontlognull
+            timeout connect 5000
+            timeout client  50000
+            timeout server  50000
+          errorfile 400 /etc/haproxy/errors/400.http
+          errorfile 403 /etc/haproxy/errors/403.http
+          errorfile 408 /etc/haproxy/errors/408.http
+          errorfile 500 /etc/haproxy/errors/500.http
+          errorfile 502 /etc/haproxy/errors/502.http
+          errorfile 503 /etc/haproxy/errors/503.http
+          errorfile 504 /etc/haproxy/errors/504.http
 
-          frontend haproxy
-            bind *:80
-            default_backend httpd
+        frontend http-in
+          bind *:80
+          default_backend servers
 
-          backend httpd
-            option forwardfor
-            server server1 {{ project_backend_host }}:{{ project_backend_port }} maxconn 32 check
+        backend servers
+          server server1 {{ project_backend_host }}:{{ project_backend_port }} maxconn 32 check
 
-          frontend stats
-            bind *:8404
-            mode http
-            no log
-            acl network_allowed src 127.0.0.0/8
-            tcp-request connection reject if !network_allowed
-            stats enable
-            stats uri /
-            stats refresh 10s
-            stats admin if LOCALHOST
+        frontend stats
+          bind *:8404
+          mode http
+          no log
+          acl network_allowed src 127.0.0.0/8
+          tcp-request connection reject if !network_allowed
+          stats enable
+          stats uri /
+          stats refresh 10s
+          stats admin if LOCALHOST
+      OpenBSD: |
+        global
+          log 127.0.0.1   local0 debug
+          maxconn 1024
+          chroot {{ haproxy_chroot_dir }}
+          uid 604
+          gid 604
+          daemon
+          pidfile /var/run/haproxy.pid
+
+        defaults
+          log global
+          mode    http
+          option  httplog
+          option  dontlognull
+          option  redispatch
+          retries 3
+          maxconn 2000
+
+        frontend haproxy
+          bind *:80
+          default_backend httpd
+
+        backend httpd
+          option forwardfor
+          server server1 {{ project_backend_host }}:{{ project_backend_port }} maxconn 32 check
+
+        frontend stats
+          bind *:8404
+          mode http
+          no log
+          acl network_allowed src 127.0.0.0/8
+          tcp-request connection reject if !network_allowed
+          stats enable
+          stats uri /
+          stats refresh 10s
+          stats admin if LOCALHOST
 
     haproxy_config: "{{ os_haproxy_config[ansible_os_family] }}"
     os_haproxy_flags:
