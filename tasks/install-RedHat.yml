@@ -1,0 +1,41 @@
+---
+
+- name: Install required python modules to manage selinux
+  ansible.builtin.yum:
+    name:
+      - libselinux-python
+      - policycoreutils-python
+
+- name: Install haproxy
+  ansible.builtin.yum:
+    name: "{{ haproxy_package }}"
+    state: present
+
+- name: Install haproxy_extra_packages
+  ansible.builtin.yum:
+    name: "{{ haproxy_extra_packages }}"
+    state: present
+
+- name: Create /etc/default/haproxy
+  ansible.builtin.template:
+    src: RedHat.sysconfig.j2
+    dest: "/etc/sysconfig/haproxy"
+    mode: "0644"
+    validate: sh -n %s
+  notify:
+    - Restart haproxy
+
+- name: Apply haproxy_selinux_seport
+  community.general.seport:
+    # XXX this is too hackish. create a role to manage selinux instead.
+    ignore_selinux_state: "{{ haproxy_selinux_seport['ignore_selinux_state'] | default(omit) }}"
+    ports: "{{ haproxy_selinux_seport['ports'] }}"
+    proto: "{{ haproxy_selinux_seport['proto'] | default(omit) }}"
+    reload: "{{ haproxy_selinux_seport['reload'] | default(omit) }}"
+    setype: "{{ haproxy_selinux_seport['setype'] }}"
+    state: "{{ haproxy_selinux_seport['state'] | default(omit) }}"
+
+- name: Enable haproxy_service
+  ansible.builtin.service:
+    name: "{{ haproxy_service }}"
+    enabled: yes

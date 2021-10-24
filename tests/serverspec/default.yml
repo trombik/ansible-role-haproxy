@@ -5,6 +5,16 @@
   vars:
     project_backend_host: 127.0.0.1
     project_backend_port: 8000
+    os_haproxy_selinux_seport:
+      FreeBSD: {}
+      Debian: {}
+      RedHat:
+        ports:
+          - 80
+          - 8404
+        proto: tcp
+        setype: http_port_t
+    haproxy_selinux_seport: "{{ os_haproxy_selinux_seport[ansible_os_family] }}"
     haproxy_config: |
       global
         daemon
@@ -38,6 +48,14 @@
         uid 604
         gid 604
         pidfile /var/run/haproxy.pid
+      {% elif ansible_os_family == 'RedHat' %}
+      log         127.0.0.1 local2
+      chroot      /var/lib/haproxy
+      pidfile     /var/run/haproxy.pid
+      maxconn     4000
+      user        haproxy
+      group       haproxy
+      daemon
       {% endif %}
 
       defaults
@@ -89,6 +107,8 @@
         #CONFIG="/etc/haproxy/haproxy.cfg"
         #EXTRAOPTS="-de -m 16"
       OpenBSD: ""
+      RedHat: |
+        OPTIONS=""
     haproxy_flags: "{{ os_haproxy_flags[ansible_os_family] }}"
     haproxy_extra_packages:
       - zsh

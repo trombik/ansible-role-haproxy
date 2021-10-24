@@ -20,6 +20,13 @@
 | `haproxy_config` | Content of `haproxy_conf_file` | `""` |
 | `haproxy_flags` | TBW | `""` |
 | `haproxy_chroot_dir` | Path to directory for `haproxy` `chroot(8)` to | `{{ __haproxy_chroot_dir }}` |
+| `haproxy_selinux_seport` | See below | `{}` |
+
+## `haproxy_selinux_seport`
+
+This variable is a dict for RedHat only. The variable is passed to
+[`community.general.seport`](https://docs.ansible.com/ansible/latest/collections/community/general/seport_module.html).
+It accepts all parameters that `community.general.seport` accepts.
 
 ## Debian
 
@@ -56,6 +63,18 @@
 | `__haproxy_package` | `haproxy` |
 | `__haproxy_chroot_dir` | `/var/haproxy` |
 
+## RedHat
+
+| Variable | Default |
+|----------|---------|
+| `__haproxy_user` | `haproxy` |
+| `__haproxy_group` | `haproxy` |
+| `__haproxy_service` | `haproxy` |
+| `__haproxy_conf_dir` | `/etc/haproxy` |
+| `__haproxy_package` | `haproxy` |
+| `__haproxy_log_dir` | `/var/log/haproxy` |
+| `__haproxy_chroot_dir` | `/var/lib/haproxy` |
+
 # Dependencies
 
 None
@@ -70,6 +89,16 @@ None
   vars:
     project_backend_host: 127.0.0.1
     project_backend_port: 8000
+    os_haproxy_selinux_seport:
+      FreeBSD: {}
+      Debian: {}
+      RedHat:
+        ports:
+          - 80
+          - 8404
+        proto: tcp
+        setype: http_port_t
+    haproxy_selinux_seport: "{{ os_haproxy_selinux_seport[ansible_os_family] }}"
     haproxy_config: |
       global
         daemon
@@ -103,6 +132,14 @@ None
         uid 604
         gid 604
         pidfile /var/run/haproxy.pid
+      {% elif ansible_os_family == 'RedHat' %}
+      log         127.0.0.1 local2
+      chroot      /var/lib/haproxy
+      pidfile     /var/run/haproxy.pid
+      maxconn     4000
+      user        haproxy
+      group       haproxy
+      daemon
       {% endif %}
 
       defaults
@@ -154,6 +191,8 @@ None
         #CONFIG="/etc/haproxy/haproxy.cfg"
         #EXTRAOPTS="-de -m 16"
       OpenBSD: ""
+      RedHat: |
+        OPTIONS=""
     haproxy_flags: "{{ os_haproxy_flags[ansible_os_family] }}"
     haproxy_extra_packages:
       - zsh
