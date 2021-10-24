@@ -35,6 +35,12 @@
     setype: "{{ haproxy_selinux_seport['setype'] }}"
     state: "{{ haproxy_selinux_seport['state'] | default(omit) }}"
 
+- name: Apply httpd_can_network_connect
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect
+    persistent: yes
+    state: yes
+
 - name: Enable haproxy_service
   ansible.builtin.service:
     name: "{{ haproxy_service }}"

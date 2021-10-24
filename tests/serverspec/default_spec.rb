@@ -88,6 +88,12 @@ when "redhat"
       its(:stdout) { should match(/^#{p}$/) }
     end
   end
+
+  describe command "semanage boolean --list" do
+    its(:exit_status) { should eq 0 }
+    its(:stderr) { should eq "" }
+    its(:stdout) { should match(/^httpd_can_network_connect\s+\(on\s*,\s*on\)/) }
+  end
 when "freebsd"
   describe file("/etc/rc.conf.d/haproxy") do
     it { should exist }
