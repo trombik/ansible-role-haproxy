@@ -2,9 +2,17 @@
 
 `ansible` role for `haproxy`.
 
+## For CentOS users
+
+The role permanently enables SELinux security policy
+`httpd_can_network_connect` to `1`.
+
 # Requirements
 
-`community.general` `ansible` collection.
+The role requires the following `ansible` collections.
+
+* `community.general`
+* `ansible.posix`
 
 # Role Variables
 
