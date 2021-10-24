@@ -71,6 +71,23 @@ when "ubuntu"
     it { should be_grouped_into default_group }
     its(:content) { should match Regexp.escape("Managed by ansible") }
   end
+when "redhat"
+  describe file("/etc/sysconfig/haproxy") do
+    it { should exist }
+    it { should be_file }
+    it { should be_mode 644 }
+    it { should be_owned_by default_user }
+    it { should be_grouped_into default_group }
+    its(:content) { should match Regexp.escape("Managed by ansible") }
+  end
+
+  describe command "semanage port -l | grep -E '^http_port_t\s+' | sed -Ee 's/^http_port_t.*tcp\s+//'  -e 's/,\s+/ /g' -e 's/\\s+/\\n/g'" do
+    its(:exit_status) { should eq 0 }
+    its(:stderr) { should eq "" }
+    ports.each do |p|
+      its(:stdout) { should match(/^#{p}$/) }
+    end
+  end
 when "freebsd"
   describe file("/etc/rc.conf.d/haproxy") do
     it { should exist }

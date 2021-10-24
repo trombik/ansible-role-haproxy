@@ -9,3 +9,4 @@ haproxy_conf_file: "{{ __haproxy_conf_dir }}/haproxy.cfg"
 haproxy_config: ""
 haproxy_flags: ""
 haproxy_chroot_dir: "{{ __haproxy_chroot_dir }}"
+haproxy_selinux_seport: {}
