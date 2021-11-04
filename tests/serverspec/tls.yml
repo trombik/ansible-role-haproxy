@@ -1,0 +1,217 @@
+---
+- hosts: localhost
+  roles:
+    - ansible-role-haproxy
+  vars:
+    # XXX this example requires _recent_ version of haproxy. older versions
+    # requires private and public keys in a single file.
+    os_project_haproxy_cert_dir:
+      FreeBSD: /usr/local/etc/haproxy
+      OpenBSD: /etc/haproxy
+      Debian: /etc/haproxy
+      RedHat: /etc/haproxy
+    project_haproxy_cert_dir: "{{ os_project_haproxy_cert_dir[ansible_os_family] }}"
+    haproxy_x509_certificate_enable: yes
+    haproxy_x509_certificate:
+      - name: ca
+        state: present
+        public:
+          # XXX haproxy does not need ca.pem. this example creates ca.pem just
+          # for the test
+          path: "{{ project_haproxy_cert_dir }}/ca.pem"
+          key: |
+            -----BEGIN CERTIFICATE-----
+            MIIDADCCAeigAwIBAgIUHQCHRKCtRpjUFp1Wy9RWIyZF6cowDQYJKoZIhvcNAQEL
+            BQAwGDEWMBQGA1UEAxMNU2Vuc3UgVGVzdCBDQTAeFw0yMTExMDQwMTEzMDBaFw0y
+            NjExMDMwMTEzMDBaMBgxFjAUBgNVBAMTDVNlbnN1IFRlc3QgQ0EwggEiMA0GCSqG
+            SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDM1JrPcAqumxRFkcm28XxfIVTd69M/D7qR
+            9CH6RRtKiTFa2Sm610RXCcteNaBMHdHyZWz8Kcx3RPH/kRauRyYC3eujFjaPMrOH
+            KtmoiaDxwjCdazRjzMaMOk9D9cH29qvf2aFm0jXQIO5qUfRipqF3vfByJZb/S/ov
+            6jnylFr4uQTg4YvrWg0ArGEiNqp51VXUst57EgxrVC/vjt5a1tEPpFuBl0KVtTd4
+            zF2p+pp1TCIycon83D5m/5y5fpWpgYGZjnrVnkLGkkhH2XfMwyeN6uuIABbD0Aa1
+            UE7PJsInOKOiV4hVtviOuRVjsItUKVWVz9C3Ht8tDHwtfGgqM5gtAgMBAAGjQjBA
+            MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQkyiS8
+            voh9bIk9J48U99RCo8z1DjANBgkqhkiG9w0BAQsFAAOCAQEAMYNCxk38yHagsFpE
+            1ArMnMmuatjuA6UkOwHy5qh5A0Ten0btZ4Qzg5ezpWD7HPrLOWzecgELMNL888y4
+            +sbMoTKzlaw4hbuceIijFITpjtsk/jSXPH0o5DPXT4FE7Z4wF0IdvZcGvaPJ3Skj
+            wpbCRd500TwHtG+Oh8Hy3ydpzuKginkR4kdthQCvtIeXY6fMU1TZdhw4//mLyqYT
+            CoO2Sd7oJmpjmCf3UuRpGdNJanjgKrH8KhKKvrSWa/oEFhBlto+5qocsKtAGmUuF
+            qi2gzFbzRH3zz4hHCr0F3VtFR8MgtlCoqdQnvKhdqqUJ1eQVxgYslY7u2WuOBgST
+            fkCwnA==
+            -----END CERTIFICATE-----
+      - name: haproxy
+        state: present
+        public:
+          path: "{{ project_haproxy_cert_dir }}/pub.pem"
+          key: |
+            -----BEGIN CERTIFICATE-----
+            MIIDTTCCAjWgAwIBAgIUHNlL1Iu65FpD0gj//jjqWN5EvdIwDQYJKoZIhvcNAQEL
+            BQAwGDEWMBQGA1UEAxMNU2Vuc3UgVGVzdCBDQTAeFw0yMTExMDQwMjE1MDBaFw0y
+            MjA1MDMwMjE1MDBaMBQxEjAQBgNVBAMTCWxvY2FsaG9zdDCCASIwDQYJKoZIhvcN
+            AQEBBQADggEPADCCAQoCggEBAMTBuMYGSeQyLOFdYPVcwSkcFsDWx8BEMtq7o8ml
+            QgcsdPSpNDi+MMMY+zSh+DCJ3/s7Sn/jKxPpI8qCJebBLX/vNAQBVdpmBTEd2iq/
+            CUSI2Bgq5RVWE4JlVjDcE7u93LjIFplGJn5B8L5ubRajI4GjhNTFACFrjKt9p8jt
+            4lARhUKEeB4m0lubdBIQYDWca+MfSoWIhYcdFJfywLtn5wEoFF9/l99DP3J4vQ5k
+            Q/g65ku/LR42K7R8R20/epmw65ogg67WuMZmjAn4bh62SDOSxTpVcZaii2L5Oz0l
+            lioIAAe4tshHAajc+WVpSsU4gQJMRBn5/U8pBHftZXVqfgECAwEAAaOBkjCBjzAO
+            BgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDAYDVR0TAQH/BAIw
+            ADAdBgNVHQ4EFgQUboVCrvak6oI5fuXs2ab9o4H2MSAwHwYDVR0jBBgwFoAUJMok
+            vL6IfWyJPSePFPfUQqPM9Q4wGgYDVR0RBBMwEYIJbG9jYWxob3N0hwR/AAABMA0G
+            CSqGSIb3DQEBCwUAA4IBAQAnzP8lqWikIEVlSNB8++fUCrYF+beyy/lUZUdLkXNr
+            deTOxTkCuBxrhPj51VrWcJD5E9C1V4Uc0/qL2NiR8zofm0ydzvajg3N0GBBsVM1Z
+            X/bINX3ZKKaq3yyMMHKShvExkHK3UwDhz70+d1IPdyTedmOdSv4EHxx2SANhuyd/
+            2Dr+RTO9IYbXhBhs6j+vmluTCis55QGixfc5ewKLh9HIMlOWdNfnlwJCncHPQdui
+            DXSV2z37LprqcL+CAGFKjJsRMD8JRZ0ZBwvSyu64ulvYBlN7kpF6XDdsPAT+u53R
+            hL/whWrEWO683cthuvo2Xnru56NaNRAyMv4UucXHgs45
+            -----END CERTIFICATE-----
+        secret:
+          # XXX haproxy assumes that a single file contains public key and
+          # secret key. when the public key file does not include secret key,
+          # it tries to:
+          #
+          # load the key at the same path suffixed by a ".key"
+          #
+          # says the official documentation>
+          path: "{{ project_haproxy_cert_dir }}/pub.pem.key"
+          owner: "{{ haproxy_user }}"
+          group: "{{ haproxy_group }}"
+          key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEpQIBAAKCAQEAxMG4xgZJ5DIs4V1g9VzBKRwWwNbHwEQy2rujyaVCByx09Kk0
+            OL4wwxj7NKH4MInf+ztKf+MrE+kjyoIl5sEtf+80BAFV2mYFMR3aKr8JRIjYGCrl
+            FVYTgmVWMNwTu73cuMgWmUYmfkHwvm5tFqMjgaOE1MUAIWuMq32nyO3iUBGFQoR4
+            HibSW5t0EhBgNZxr4x9KhYiFhx0Ul/LAu2fnASgUX3+X30M/cni9DmRD+DrmS78t
+            HjYrtHxHbT96mbDrmiCDrta4xmaMCfhuHrZIM5LFOlVxlqKLYvk7PSWWKggAB7i2
+            yEcBqNz5ZWlKxTiBAkxEGfn9TykEd+1ldWp+AQIDAQABAoIBAQCOHDl/1bTy/AaM
+            c+x+65KcRaxtdfPqe5ebgqGHGDR7h/GlcLzGKyB/GYD+/+mJ7Vt4Ute5TPOlOuPd
+            9Wi4pVheqf+Q0QIYb01ar2wPKdHgzVH/CqRRZ81JhjXdrmcWV8ifMe2YoSFWWfwv
+            HwTtr8EKdnePUgaJHOwKRQS1zJOELg4630f2K+2Bun54+StyM/8f58xFNdPU5uzn
+            ebc8A+8wsMQzJ5Tv1M4V3p4o8aHJB0i9oCisnljpWP/v+LT5Bpfs0wdXIK24nssN
+            TTytlbJlj74A7W4EVvycX/32M0wP87t5TWrkdr+i/uj4zdUO+GK1PahWm5Mht3hr
+            P6nMdJXRAoGBAM+r1kmOyi/utO3EcIKz/Y7cDbqduYDGMY4fJfq3Qzd2q/nobRMr
+            eWzV8eAT+nn2Xu6yZ5pwzCOgHzWiAdBi9bPWwf/g6XnJNRKaWrEKcZ4jhFFHKYa3
+            /jM/E78qVxAsoCtVtxlaFBcCOASJ3l4tEey7DwdgvUpS1jDqr3hdtV6dAoGBAPKL
+            pRB/mk/gJSVR3G99TsrVsm9vK+ZZjaIuf3QDHsddyojZIBIrWaUf0yK/QkGUkDcF
+            q4o8frh/pzGOiPsKrC1++2QxOOiO2eUPU3ClK3IYvcqEK4oH15JUxeSoSMPPcoKF
+            pJeCUc7b+khjxFmPn/gnlo0uS0ETRd9zkCMIsS21AoGBAKmhVxwmgoi8lxVQTAa3
+            NvomTSCODSRev8OzNbahU0pOqRMtA0uRS1HXQAckyogs8kZPe8jvMhA3jsakWo75
+            BnGrjjOQZ6WO8McNRd8vBLeDk2VAl27vg7ggYeTYlN0lVn+POEyBA7/3lAJBC14p
+            umaANTp1jqjTGRpD2KidArURAoGBAK9IIBgWP2yuLeoUiNvBkSmg2f0SOIWV/ndQ
+            ZyduAdZOf8n6L+Uxku10XF9mHPnL5ZT98gRKx8GJ70gvG+tgwSF3/TFhKSFX6zxQ
+            oRptI0KngrFSZyyvkijcPs+Kllt8FeMhtdsQgRKfgvbBsuqOkysBYRnSdOwog3yC
+            xY2sAG9pAoGAEvadVWrL4J4mH12Rs35r451d00VRPu4LTayfbqMzhsL33rPDaYNI
+            Wcylx/oLFbAWCxgy2B8D2/trLWAWrwqhX/5truSW3jQsGiMyrO+QiCEqfcT9hii8
+            sFiRP5Yp3lqWcUbkdtroaT+7tgRImUYx18EEX32KbNLWPLjJjZ/eo74=
+            -----END RSA PRIVATE KEY-----
+
+    haproxy_x509_certificate_debug_log: yes
+
+    project_backend_host: 127.0.0.1
+    project_backend_port: 8000
+    os_haproxy_selinux_seport:
+      FreeBSD: {}
+      Debian: {}
+      RedHat:
+        ports:
+          - 80
+          - 8404
+        proto: tcp
+        setype: http_port_t
+    haproxy_selinux_seport: "{{ os_haproxy_selinux_seport[ansible_os_family] }}"
+    haproxy_config: |
+      global
+        daemon
+      {% if ansible_os_family == 'FreeBSD' %}
+      # FreeBSD package does not provide default
+        maxconn 4096
+        log /var/run/log local0 notice
+          user {{ haproxy_user }}
+          group {{ haproxy_group }}
+      {% elif ansible_os_family == 'Debian' %}
+        log /dev/log  local0
+        log /dev/log  local1 notice
+        chroot {{ haproxy_chroot_dir }}
+        stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+        stats timeout 30s
+        user {{ haproxy_user }}
+        group {{ haproxy_group }}
+
+        # Default SSL material locations
+        ca-base /etc/ssl/certs
+        crt-base /etc/ssl/private
+
+        # See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
+          ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+          ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+          ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
+      {% elif ansible_os_family == 'OpenBSD' %}
+        log 127.0.0.1   local0 debug
+        maxconn 1024
+        chroot {{ haproxy_chroot_dir }}
+        uid 604
+        gid 604
+        pidfile /var/run/haproxy.pid
+      {% elif ansible_os_family == 'RedHat' %}
+      log         127.0.0.1 local2
+      chroot      /var/lib/haproxy
+      pidfile     /var/run/haproxy.pid
+      maxconn     4000
+      user        haproxy
+      group       haproxy
+      daemon
+      {% endif %}
+
+      defaults
+        log global
+        mode http
+        timeout connect 5s
+        timeout client 10s
+        timeout server 10s
+        option  httplog
+        option  dontlognull
+        retries 3
+        maxconn 2000
+      {% if ansible_os_family == 'Debian' %}
+        errorfile 400 /etc/haproxy/errors/400.http
+        errorfile 403 /etc/haproxy/errors/403.http
+        errorfile 408 /etc/haproxy/errors/408.http
+        errorfile 500 /etc/haproxy/errors/500.http
+        errorfile 502 /etc/haproxy/errors/502.http
+        errorfile 503 /etc/haproxy/errors/503.http
+        errorfile 504 /etc/haproxy/errors/504.http
+      {% elif ansible_os_family == 'OpenBSD' %}
+        option  redispatch
+      {% endif %}
+
+      frontend http-in
+        bind *:443 ssl crt {{ project_haproxy_cert_dir }}/pub.pem
+        default_backend servers
+
+      backend servers
+        option forwardfor
+        server server1 {{ project_backend_host }}:{{ project_backend_port }} maxconn 32 check
+
+      frontend stats
+        bind *:8404
+        mode http
+        no log
+        acl network_allowed src 127.0.0.0/8
+        tcp-request connection reject if !network_allowed
+        stats enable
+        stats uri /
+        stats refresh 10s
+        stats admin if LOCALHOST
+
+    os_haproxy_flags:
+      FreeBSD: |
+        haproxy_config="{{ haproxy_conf_file }}"
+        #haproxy_flags="-q -f ${haproxy_config} -p ${pidfile}"
+      Debian: |
+        #CONFIG="/etc/haproxy/haproxy.cfg"
+        #EXTRAOPTS="-de -m 16"
+      OpenBSD: ""
+      RedHat: |
+        OPTIONS=""
+    haproxy_flags: "{{ os_haproxy_flags[ansible_os_family] }}"
+    haproxy_extra_packages:
+      - zsh

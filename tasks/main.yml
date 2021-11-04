@@ -7,6 +7,15 @@
 - name: "Include install-{{ ansible_os_family }}.yml"
   include: "install-{{ ansible_os_family }}.yml"
 
+- name: Include trombik.x509_certificate
+  include_role:
+    name: trombik.x509_certificate
+  vars:
+    x509_certificate: "{{ haproxy_x509_certificate }}"
+    x509_certificate_debug_log: "{{ haproxy_x509_certificate_debug_log }}"
+  when:
+    - haproxy_x509_certificate_enable
+
 - name: Create haproxy.conf
   ansible.builtin.template:
     src: haproxy.conf.j2

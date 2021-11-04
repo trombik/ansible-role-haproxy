@@ -10,3 +10,6 @@ haproxy_config: ""
 haproxy_flags: ""
 haproxy_chroot_dir: "{{ __haproxy_chroot_dir }}"
 haproxy_selinux_seport: {}
+haproxy_x509_certificate_enable: no
+haproxy_x509_certificate: []
+haproxy_x509_certificate_debug_log: no

@@ -65,3 +65,14 @@ suites:
     verifier:
       name: shell
       command: rspec -c -f d -I tests/serverspec tests/serverspec/default_spec.rb
+
+  - name: tls
+    provisioner:
+      name: ansible_playbook
+      playbook: tests/serverspec/tls.yml
+    verifier:
+      name: shell
+      command: rspec -c -f d -I tests/serverspec tests/serverspec/tls_spec.rb
+    excludes:
+      - centos-7.8-x86_64
+      - ubuntu-20.04-amd64
