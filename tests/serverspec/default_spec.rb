@@ -25,8 +25,19 @@ group   = case os[:family]
           else
             "haproxy"
           end
-ports   = [80, 8404]
-config  = "#{config_dir}/haproxy.cfg"
+# rubocop:disable Style/GlobalVars
+puts $TLS
+ports = $TLS ? [443, 8404] : [80, 8404]
+# rubocop:enable Style/GlobalVars
+cert_dir = case os[:family]
+           when "freebsd"
+             "/usr/local/etc/haproxy"
+           else
+             "/etc/haproxy"
+           end
+ca_pem_file = "#{cert_dir}/ca.pem"
+
+config = "#{config_dir}/haproxy.cfg"
 default_user = "root"
 default_group = case os[:family]
                 when /bsd/
@@ -121,3 +132,41 @@ describe command "curl -s http://localhost:8404" do
   its(:stderr) { should eq "" }
   its(:stdout) { should match(/Statistics Report/) }
 end
+
+# rubocop:disable Style/GlobalVars
+if $TLS
+  describe file "#{cert_dir}/ca.pem" do
+    it { should exist }
+    it { should be_file }
+    it { should be_mode 444 }
+    its(:content) { should match(/BEGIN CERTIFICATE/) }
+  end
+
+  describe file "#{cert_dir}/pub.pem" do
+    it { should exist }
+    it { should be_file }
+    it { should be_mode 444 }
+    its(:content) { should match(/BEGIN CERTIFICATE/) }
+  end
+
+  describe file "#{cert_dir}/pub.pem" do
+    it { should exist }
+    it { should be_file }
+    it { should be_mode 444 }
+    its(:content) { should match(/BEGIN CERTIFICATE/) }
+  end
+
+  describe file "#{cert_dir}/pub.pem.key" do
+    it { should exist }
+    it { should be_owned_by user }
+    it { should be_grouped_into group }
+    it { should be_mode 400 }
+    its(:content) { should match(/BEGIN (?:RSA )?PRIVATE KEY/) }
+  end
+
+  describe command "curl --cacert #{ca_pem_file.shellescape} -o /dev/null -s -v https://localhost" do
+    its(:exit_status) { should eq 0 }
+    its(:stderr) { should match(/SSL certificate verify ok/) }
+  end
+end
+# rubocop:enable Style/GlobalVars

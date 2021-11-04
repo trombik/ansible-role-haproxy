@@ -2,6 +2,10 @@
 
 `ansible` role for `haproxy`.
 
+The role supports TLS by including
+[`trombik.x509_certificate`](https://github.com/trombik/ansible-role-x509_certificate).
+See [tests/serverspec/tls.yml](tests/serverspec/tls.yml) for an example.
+
 ## For CentOS users
 
 The role permanently enables SELinux security policy
@@ -29,6 +33,9 @@ The role requires the following `ansible` collections.
 | `haproxy_flags` | TBW | `""` |
 | `haproxy_chroot_dir` | Path to directory for `haproxy` `chroot(8)` to | `{{ __haproxy_chroot_dir }}` |
 | `haproxy_selinux_seport` | See below | `{}` |
+| `haproxy_x509_certificate_enable` | If yes, include [`trombik.x509_cetificte`](https://github.com/trombik/ansible-role-x509_certificate) role during the play. | `no` |
+| `haproxy_x509_certificate` | List of certificates for `trombik.x509_certificate` | `[]` |
+| `haproxy_x509_certificate_debug_log` | Enable debug log when playing `trombik.x509_certificate` role | `no` |
 
 ## `haproxy_selinux_seport`
 
@@ -85,7 +92,8 @@ It accepts all parameters that `community.general.seport` accepts.
 
 # Dependencies
 
-None
+[`trombik.x509_certificate`](https://github.com/trombik/ansible-role-x509_certificate)
+when `haproxy_x509_certificate_enable` is `yes`.
 
 # Example Playbook
 
