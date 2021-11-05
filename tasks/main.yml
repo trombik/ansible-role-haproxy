@@ -4,6 +4,19 @@
 - name: "Include {{ ansible_os_family }}.yml"
   include_vars: "{{ ansible_os_family }}.yml"
 
+- name: Do fail when haproxy_x509_certificate is used
+  fail:
+    msg: "haproxy_x509_certificate is deprecated, use haproxy_x509_certificate_vars instead"
+  when:
+    - haproxy_x509_certificate is defined
+
+- name: Do fail when haproxy_x509_certificate_debug_log is used
+  fail:
+    msg: "haproxy_x509_certificate_debug_log is deprecated, use haproxy_x509_certificate_vars instead"
+  when:
+    - haproxy_x509_certificate_debug_log is defined
+
+
 - name: "Include install-{{ ansible_os_family }}.yml"
   include: "install-{{ ansible_os_family }}.yml"
 
@@ -11,8 +24,7 @@
   include_role:
     name: trombik.x509_certificate
   vars:
-    x509_certificate: "{{ haproxy_x509_certificate }}"
-    x509_certificate_debug_log: "{{ haproxy_x509_certificate_debug_log }}"
+    x509_certificate_vars: "{{ haproxy_x509_certificate_vars }}"
   when:
     - haproxy_x509_certificate_enable
 
