@@ -34,8 +34,14 @@ The role requires the following `ansible` collections.
 | `haproxy_chroot_dir` | Path to directory for `haproxy` `chroot(8)` to | `{{ __haproxy_chroot_dir }}` |
 | `haproxy_selinux_seport` | See below | `{}` |
 | `haproxy_x509_certificate_enable` | If yes, include [`trombik.x509_cetificte`](https://github.com/trombik/ansible-role-x509_certificate) role during the play. | `no` |
-| `haproxy_x509_certificate` | List of certificates for `trombik.x509_certificate` | `[]` |
-| `haproxy_x509_certificate_debug_log` | Enable debug log when playing `trombik.x509_certificate` role | `no` |
+| `haproxy_x509_certificate_vars` | A dict of role variables for `trombik.x509_certificate`. This variable is passed to the role during the play. | `{}` |
+
+## Obsolete role variables
+
+The following role variables are obsolete, and do not work with the role.
+
+* `haproxy_x509_certificate`
+* `haproxy_x509_certificate_debug_log`
 
 ## `haproxy_selinux_seport`
 
