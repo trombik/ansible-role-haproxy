@@ -1,3 +1,7 @@
+## Release 2.0.0
+
+* 637b89f breaking change: include_role `trombik.x509_certificate` with haproxy_x509_certificate_vars
+
 ## Release 1.2.1
 
 * 0e6a8b6 feature: support x509_certificate
