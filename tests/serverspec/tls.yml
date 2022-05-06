@@ -19,27 +19,30 @@
           state: present
           public:
             # XXX haproxy does not need ca.pem. this example creates ca.pem just
-            # for the test
+            # for the test.
+            #
+            # openssl ecparam -genkey -name secp384r1 -out ca.key
+            # openssl req -x509 -new -sha512 -nodes -key ca.key -days 3650 -out ca.pem
+            #
+            # openssl genrsa -out host.key
+            # openssl req -new -sha512 -nodes -key host.key -out host.csr
+            # openssl x509 -req -sha512 -days 3650 -in host.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out host.crt
             path: "{{ project_haproxy_cert_dir }}/ca.pem"
             key: |
               -----BEGIN CERTIFICATE-----
-              MIIDADCCAeigAwIBAgIUHQCHRKCtRpjUFp1Wy9RWIyZF6cowDQYJKoZIhvcNAQEL
-              BQAwGDEWMBQGA1UEAxMNU2Vuc3UgVGVzdCBDQTAeFw0yMTExMDQwMTEzMDBaFw0y
-              NjExMDMwMTEzMDBaMBgxFjAUBgNVBAMTDVNlbnN1IFRlc3QgQ0EwggEiMA0GCSqG
-              SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDM1JrPcAqumxRFkcm28XxfIVTd69M/D7qR
-              9CH6RRtKiTFa2Sm610RXCcteNaBMHdHyZWz8Kcx3RPH/kRauRyYC3eujFjaPMrOH
-              KtmoiaDxwjCdazRjzMaMOk9D9cH29qvf2aFm0jXQIO5qUfRipqF3vfByJZb/S/ov
-              6jnylFr4uQTg4YvrWg0ArGEiNqp51VXUst57EgxrVC/vjt5a1tEPpFuBl0KVtTd4
-              zF2p+pp1TCIycon83D5m/5y5fpWpgYGZjnrVnkLGkkhH2XfMwyeN6uuIABbD0Aa1
-              UE7PJsInOKOiV4hVtviOuRVjsItUKVWVz9C3Ht8tDHwtfGgqM5gtAgMBAAGjQjBA
-              MA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQkyiS8
-              voh9bIk9J48U99RCo8z1DjANBgkqhkiG9w0BAQsFAAOCAQEAMYNCxk38yHagsFpE
-              1ArMnMmuatjuA6UkOwHy5qh5A0Ten0btZ4Qzg5ezpWD7HPrLOWzecgELMNL888y4
-              +sbMoTKzlaw4hbuceIijFITpjtsk/jSXPH0o5DPXT4FE7Z4wF0IdvZcGvaPJ3Skj
-              wpbCRd500TwHtG+Oh8Hy3ydpzuKginkR4kdthQCvtIeXY6fMU1TZdhw4//mLyqYT
-              CoO2Sd7oJmpjmCf3UuRpGdNJanjgKrH8KhKKvrSWa/oEFhBlto+5qocsKtAGmUuF
-              qi2gzFbzRH3zz4hHCr0F3VtFR8MgtlCoqdQnvKhdqqUJ1eQVxgYslY7u2WuOBgST
-              fkCwnA==
+              MIICTTCCAdSgAwIBAgIUGAHoCKF0SS0d9oT7EmAT26XBUV0wCgYIKoZIzj0EAwQw
+              XjELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGElu
+              dGVybmV0IFdpZGdpdHMgUHR5IEx0ZDEXMBUGA1UEAwwOY2EudHJvbWJpay5vcmcw
+              HhcNMjIwNTA2MjE0MjUxWhcNMzIwNTAzMjE0MjUxWjBeMQswCQYDVQQGEwJBVTET
+              MBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQ
+              dHkgTHRkMRcwFQYDVQQDDA5jYS50cm9tYmlrLm9yZzB2MBAGByqGSM49AgEGBSuB
+              BAAiA2IABDcW8Hnix2TlA5zPA+y5ViIlL/yx5zHBAeTOUXGRzzAGGv4xIxaDGVTK
+              0cYuR6Y+95xve6/kWlLhHD+fYflDvwI0uWX5mjN1UfsqqZqtJts7WAqAORiSDtsx
+              25mL42GRwKNTMFEwHQYDVR0OBBYEFGowCxLJ4t7U0zgz83OrZGcfgbevMB8GA1Ud
+              IwQYMBaAFGowCxLJ4t7U0zgz83OrZGcfgbevMA8GA1UdEwEB/wQFMAMBAf8wCgYI
+              KoZIzj0EAwQDZwAwZAIwEf7ZB6ujXxYp0TiqJrkE8YTwumywXgyQZwVHF3FXTm+8
+              4WuCbiMNkFogMI2q0NNpAjA/WVuf8Sg2OBMcP29UGj2be0p2qS9jeFZoYUr2D+oB
+              KSUhp4jRElrOhNOwX+lub84=
               -----END CERTIFICATE-----
         - name: haproxy
           state: present
@@ -47,24 +50,21 @@
             path: "{{ project_haproxy_cert_dir }}/pub.pem"
             key: |
               -----BEGIN CERTIFICATE-----
-              MIIDTTCCAjWgAwIBAgIUHNlL1Iu65FpD0gj//jjqWN5EvdIwDQYJKoZIhvcNAQEL
-              BQAwGDEWMBQGA1UEAxMNU2Vuc3UgVGVzdCBDQTAeFw0yMTExMDQwMjE1MDBaFw0y
-              MjA1MDMwMjE1MDBaMBQxEjAQBgNVBAMTCWxvY2FsaG9zdDCCASIwDQYJKoZIhvcN
-              AQEBBQADggEPADCCAQoCggEBAMTBuMYGSeQyLOFdYPVcwSkcFsDWx8BEMtq7o8ml
-              QgcsdPSpNDi+MMMY+zSh+DCJ3/s7Sn/jKxPpI8qCJebBLX/vNAQBVdpmBTEd2iq/
-              CUSI2Bgq5RVWE4JlVjDcE7u93LjIFplGJn5B8L5ubRajI4GjhNTFACFrjKt9p8jt
-              4lARhUKEeB4m0lubdBIQYDWca+MfSoWIhYcdFJfywLtn5wEoFF9/l99DP3J4vQ5k
-              Q/g65ku/LR42K7R8R20/epmw65ogg67WuMZmjAn4bh62SDOSxTpVcZaii2L5Oz0l
-              lioIAAe4tshHAajc+WVpSsU4gQJMRBn5/U8pBHftZXVqfgECAwEAAaOBkjCBjzAO
-              BgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDAYDVR0TAQH/BAIw
-              ADAdBgNVHQ4EFgQUboVCrvak6oI5fuXs2ab9o4H2MSAwHwYDVR0jBBgwFoAUJMok
-              vL6IfWyJPSePFPfUQqPM9Q4wGgYDVR0RBBMwEYIJbG9jYWxob3N0hwR/AAABMA0G
-              CSqGSIb3DQEBCwUAA4IBAQAnzP8lqWikIEVlSNB8++fUCrYF+beyy/lUZUdLkXNr
-              deTOxTkCuBxrhPj51VrWcJD5E9C1V4Uc0/qL2NiR8zofm0ydzvajg3N0GBBsVM1Z
-              X/bINX3ZKKaq3yyMMHKShvExkHK3UwDhz70+d1IPdyTedmOdSv4EHxx2SANhuyd/
-              2Dr+RTO9IYbXhBhs6j+vmluTCis55QGixfc5ewKLh9HIMlOWdNfnlwJCncHPQdui
-              DXSV2z37LprqcL+CAGFKjJsRMD8JRZ0ZBwvSyu64ulvYBlN7kpF6XDdsPAT+u53R
-              hL/whWrEWO683cthuvo2Xnru56NaNRAyMv4UucXHgs45
+              MIICnTCCAiMCFCB3EyH/GwHJzpmvClZJQq3PdEW5MAoGCCqGSM49BAMEMF4xCzAJ
+              BgNVBAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5l
+              dCBXaWRnaXRzIFB0eSBMdGQxFzAVBgNVBAMMDmNhLnRyb21iaWsub3JnMB4XDTIy
+              MDUwNjIxNTg0OVoXDTMyMDUwMzIxNTg0OVowWTELMAkGA1UEBhMCQVUxEzARBgNV
+              BAgMClNvbWUtU3RhdGUxITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0
+              ZDESMBAGA1UEAwwJbG9jYWxob3N0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB
+              CgKCAQEA9BjRBPJ/lya5YY3ubmettQDVU78owFaZE9WB2EiiuqI5rNCzS/rNU5yl
+              LJ3wZfa2dj3KAo2hB2DGcr8uXH0MKn9VYSDiPFP0N2AaMTcnZjMnRoD42QQvKF3S
+              MHmWbvYrBrzdP+PSm5cfhbuSvsddy73I3nK/L04eJEORKx9UhrWDOWQnasFgwCJZ
+              Lzf794KLTFCnpWKOhPbqHKgAv4jxHhG8ynfnxT11DteZLb4SbrQSlQohKPorxY9u
+              80O2m8eFdRanJ7+a+gFLDQWXHZf8qYFmIf7OiOzDCiSa9tV4wKJjoqtCd/UaaV+W
+              3FrauNCcG9WRXrv8y0nBlMDj5Fl5+QIDAQABMAoGCCqGSM49BAMEA2gAMGUCMBGU
+              ZXsoQeMM2U8ohYs4EiNaCDRpu070S87nhvqr49rzPtY5rWlbEQ73pu2mVheIpgIx
+              ALpVFQCwtx1tqDWPGLKDt9XAwAXq639aH8lCF3Cg33Wene55VEDQVUjGAsEUgWc+
+              mw==
               -----END CERTIFICATE-----
           secret:
             # XXX haproxy assumes that a single file contains public key and
@@ -79,33 +79,32 @@
             group: "{{ haproxy_group }}"
             key: |
               -----BEGIN RSA PRIVATE KEY-----
-              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
+              MIIEpQIBAAKCAQEA9BjRBPJ/lya5YY3ubmettQDVU78owFaZE9WB2EiiuqI5rNCz
+              S/rNU5ylLJ3wZfa2dj3KAo2hB2DGcr8uXH0MKn9VYSDiPFP0N2AaMTcnZjMnRoD4
+              2QQvKF3SMHmWbvYrBrzdP+PSm5cfhbuSvsddy73I3nK/L04eJEORKx9UhrWDOWQn
+              asFgwCJZLzf794KLTFCnpWKOhPbqHKgAv4jxHhG8ynfnxT11DteZLb4SbrQSlQoh
+              KPorxY9u80O2m8eFdRanJ7+a+gFLDQWXHZf8qYFmIf7OiOzDCiSa9tV4wKJjoqtC
+              d/UaaV+W3FrauNCcG9WRXrv8y0nBlMDj5Fl5+QIDAQABAoIBACXgB+bFneidOJyb
+              gkidS8XPKErDWZZmmYALXAdsVduxulNHWtrKQrvbjYGbzCZ2Hp/APK0ivr6/VGuP
+              oKj3OkEJ2vykNpZ3zGgfQFEspq9j9o8pCfPag1q3HBsrcp0rE0gLXCVCu3Yq/9gn
+              X8C8fKBVhWqG0YWMkH6+ATN4vAveprRy+XLMiUvP2qu/7rJEUJSvXtxeAdkScJg/
+              UNsBu5B6hEfaMBt/JjWyzLOKbVHyaCsHmt6wi0p58Z7mOJFkHyr4IY14sqg7hAph
+              bbSNSwmq3gLW9/LyeqOIST9Vm/hoeL5IDz6z6dyptoObE8r2U3jKIwMazX7fKjMQ
+              Lws531UCgYEA/k1077vd5MhQ0aurOxH8xJajys/RLOwLxVEQeoxnbbvkfzNiyh5R
+              Gb3R9y6ZeY6WoD/wk88RMkTqQgnA4hYqasLRBK7Dh+fWFhHU3CadMo55EiZvAaaw
+              B8XfdjIfb37+q0MZAybuZISG5Lrr+dUW19ehOfO6HYebd4+L25owMwcCgYEA9bnr
+              shZoIGZBZJThQNQgbWPvSNb0sH4Mz3ySPCc71NfQuuzKP2tHPoVIvPM0/UMbtOh6
+              MyS0sAR6ehns+r8lNYFGWgFMba0Jyx/1ZEoOQn3E/oW+znjLofdJyAJ+N20UZc6Y
+              k/wIbvACbkb0F5fFYunc49xZCVbY4ffa4S7sqv8CgYEA47IG2gCklYymkJXdI27f
+              nEYlMhsRd9+CSpJi5teAZEiwNxSTh9XNV/cWYPRghu6c/69AgZgOFayO88I36jde
+              k2kMLd0tRirXDbu5k8UfS301+oJfMmNFijAp/XKzoularY3Of3wESAxBm9uiHngl
+              k+2GdpU8N+SL12m4GFDeh1ECgYEAmSr5+vkykLeMnXib7AAN8oHvfrTWs0jvDUp2
+              EN7X0bVw24OMEfn538PO8lCbQB7bn2ml+kkwA+PWwFN2v1n0hKR/SM00ac0JpL7Y
+              BFqRButEpu6RYDw1mlD9gZnkOQJaS5d6zgu06gnbSggaULZ/CEgEM1h/e23SJRCN
+              M/4+8dsCgYEA1VQdCHfCKdtyQW4awRT2qtim40eGHNbjUEHhBaivW/2buIqcQpkx
+              HMNRLEjYYH+j/IaJJ2c9WnbxVAC9dlRQBjQ4QqvdzkAjWl3qhPIze6jiPWaayv5D
+              xVDtOIrH1/uDOCluN9/lLB5cM3AtpTHjNaf/X67XCicx/73N8rY6T/Y=
               -----END RSA PRIVATE KEY-----
-
     project_backend_host: 127.0.0.1
     project_backend_port: 8000
     os_haproxy_selinux_seport:
