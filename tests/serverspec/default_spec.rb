@@ -82,7 +82,7 @@ when "ubuntu"
     it { should be_grouped_into default_group }
     its(:content) { should match Regexp.escape("Managed by ansible") }
   end
-when "redhat"
+when "redhat", "fedora"
   describe file("/etc/sysconfig/haproxy") do
     it { should exist }
     it { should be_file }

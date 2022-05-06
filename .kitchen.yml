@@ -57,6 +57,14 @@ platforms:
       box: trombik/ansible-centos-7.8-x86_64
       box_check_update: false
 
+  - name: fedora-35-amd64
+    driver:
+      box: trombik/ansible-fedora-35-amd64
+      box_check_update: false
+    provisioner:
+      extra_vars:
+        ansible_python_interpreter: '/usr/bin/python3'
+
 suites:
   - name: default
     provisioner:
@@ -75,4 +83,5 @@ suites:
       command: rspec -c -f d -I tests/serverspec tests/serverspec/tls_spec.rb
     excludes:
       - centos-7.8-x86_64
+      - fedora-35-amd64
       - ubuntu-20.04-amd64
