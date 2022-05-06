@@ -1,12 +1,12 @@
 ---
 
-- name: Install required python modules to manage selinux on RedHat
+- name: Install required python modules to manage selinux on CentOS
   ansible.builtin.yum:
     name:
       - libselinux-python
       - policycoreutils-python
   when:
-    - ansible_distribution == 'RedHat'
+    - ansible_distribution == 'CentOS'
 
 - name: Install required python modules to manage selinux on Fedora
   ansible.builtin.dnf:
@@ -16,12 +16,12 @@
   when:
     - ansible_distribution == 'Fedora'
 
-- name: Install haproxy on RedHat
+- name: Install haproxy on CentOS
   ansible.builtin.yum:
     name: "{{ haproxy_package }}"
     state: present
   when:
-    - ansible_distribution == 'RedHat'
+    - ansible_distribution == 'CentOS'
 
 - name: Install haproxy on Fedora
   ansible.builtin.dnf:
@@ -30,12 +30,12 @@
   when:
     - ansible_distribution == 'Fedora'
 
-- name: Install haproxy_extra_packages on RedHat
+- name: Install haproxy_extra_packages on CentOS
   ansible.builtin.yum:
     name: "{{ haproxy_extra_packages }}"
     state: present
   when:
-    - ansible_distribution == 'RedHat'
+    - ansible_distribution == 'CentOS'
 
 - name: Install haproxy_extra_packages on Fedora
   ansible.builtin.dnf:
