@@ -51,50 +51,67 @@ It accepts all parameters that `community.general.seport` accepts.
 
 ## Debian
 
-| Variable | Default |
-|----------|---------|
-| `__haproxy_user` | `haproxy` |
-| `__haproxy_group` | `haproxy` |
-| `__haproxy_service` | `haproxy` |
-| `__haproxy_conf_dir` | `/etc/haproxy` |
-| `__haproxy_package` | `haproxy` |
-| `__haproxy_log_dir` | `/var/log/haproxy` |
-| `__haproxy_chroot_dir` | `/var/lib/haproxy` |
+```yaml
+---
+__haproxy_user: haproxy
+__haproxy_group: haproxy
+__haproxy_service: haproxy
+__haproxy_conf_dir: "/etc/haproxy"
+__haproxy_package: haproxy
+__haproxy_log_dir: "/var/log/haproxy"
+__haproxy_chroot_dir: "/var/lib/haproxy"
+```
 
 ## FreeBSD
 
-| Variable | Default |
-|----------|---------|
-| `__haproxy_user` | `www` |
-| `__haproxy_group` | `www` |
-| `__haproxy_service` | `haproxy` |
-| `__haproxy_conf_dir` | `/usr/local/etc` |
-| `__haproxy_package` | `haproxy` |
-| `__haproxy_log_dir` | `/var/log/haproxy` |
-| `__haproxy_chroot_dir` | `/var/haproxy` |
+```yaml
+---
+__haproxy_user: www
+__haproxy_group: www
+__haproxy_service: haproxy
+__haproxy_conf_dir: "/usr/local/etc"
+__haproxy_package: haproxy
+__haproxy_log_dir: "/var/log/haproxy"
+__haproxy_chroot_dir: "/var/haproxy"
+```
 
 ## OpenBSD
 
-| Variable | Default |
-|----------|---------|
-| `__haproxy_user` | `_haproxy` |
-| `__haproxy_group` | `_haproxy` |
-| `__haproxy_service` | `haproxy` |
-| `__haproxy_conf_dir` | `/etc/haproxy` |
-| `__haproxy_package` | `haproxy` |
-| `__haproxy_chroot_dir` | `/var/haproxy` |
+```yaml
+---
+__haproxy_user: _haproxy
+__haproxy_group: _haproxy
+__haproxy_service: haproxy
+__haproxy_conf_dir: "/etc/haproxy"
+__haproxy_package: haproxy
+__haproxy_chroot_dir: "/var/haproxy"
+```
 
 ## RedHat
 
-| Variable | Default |
-|----------|---------|
-| `__haproxy_user` | `haproxy` |
-| `__haproxy_group` | `haproxy` |
-| `__haproxy_service` | `haproxy` |
-| `__haproxy_conf_dir` | `/etc/haproxy` |
-| `__haproxy_package` | `haproxy` |
-| `__haproxy_log_dir` | `/var/log/haproxy` |
-| `__haproxy_chroot_dir` | `/var/lib/haproxy` |
+```yaml
+---
+__haproxy_user: haproxy
+__haproxy_group: haproxy
+__haproxy_service: haproxy
+__haproxy_conf_dir: "/etc/haproxy"
+__haproxy_package: haproxy
+__haproxy_log_dir: "/var/log/haproxy"
+__haproxy_chroot_dir: "/var/lib/haproxy"
+```
+
+## Fedora
+
+```yaml
+---
+__haproxy_user: haproxy
+__haproxy_group: haproxy
+__haproxy_service: haproxy
+__haproxy_conf_dir: "/etc/haproxy"
+__haproxy_package: haproxy
+__haproxy_log_dir: "/var/log/haproxy"
+__haproxy_chroot_dir: "/var/lib/haproxy"
+```
 
 # Dependencies
 

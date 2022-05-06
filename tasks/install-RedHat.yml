@@ -1,20 +1,48 @@
 ---
 
-- name: Install required python modules to manage selinux
+- name: Install required python modules to manage selinux on RedHat
   ansible.builtin.yum:
     name:
       - libselinux-python
       - policycoreutils-python
+  when:
+    - ansible_distribution == 'RedHat'
 
-- name: Install haproxy
+- name: Install required python modules to manage selinux on Fedora
+  ansible.builtin.dnf:
+    name:
+      - python3-libselinux
+      - python3-policycoreutils
+  when:
+    - ansible_distribution == 'Fedora'
+
+- name: Install haproxy on RedHat
   ansible.builtin.yum:
     name: "{{ haproxy_package }}"
     state: present
+  when:
+    - ansible_distribution == 'RedHat'
 
-- name: Install haproxy_extra_packages
+- name: Install haproxy on Fedora
+  ansible.builtin.dnf:
+    name: "{{ haproxy_package }}"
+    state: present
+  when:
+    - ansible_distribution == 'Fedora'
+
+- name: Install haproxy_extra_packages on RedHat
   ansible.builtin.yum:
     name: "{{ haproxy_extra_packages }}"
     state: present
+  when:
+    - ansible_distribution == 'RedHat'
+
+- name: Install haproxy_extra_packages on Fedora
+  ansible.builtin.dnf:
+    name: "{{ haproxy_extra_packages }}"
+    state: present
+  when:
+    - ansible_distribution == 'Fedora'
 
 - name: Create /etc/default/haproxy
   ansible.builtin.template:
