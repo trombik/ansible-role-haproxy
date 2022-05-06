@@ -13,6 +13,7 @@
     name:
       - python3-libselinux
       - python3-policycoreutils
+      - policycoreutils-python-utils
   when:
     - ansible_distribution == 'Fedora'
 
