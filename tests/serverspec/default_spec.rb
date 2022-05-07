@@ -164,9 +164,21 @@ if $TLS
     its(:content) { should match(/BEGIN (?:RSA )?PRIVATE KEY/) }
   end
 
-  describe command "curl --cacert #{ca_pem_file.shellescape} -o /dev/null -s -v https://localhost" do
-    its(:exit_status) { should eq 0 }
-    its(:stderr) { should match(/SSL certificate verify ok/) }
+  case os[:family]
+  when "freebsd"
+    # XXX use fetch(1) instead of curl.
+    # curl 7.82.0 fails with `curl: (27) Out of memory` on FreeBSD 13.0.
+    # probably, a bug.
+    # TODO upgrade curl to the latest and see if it works
+    describe command "fetch --ca-cert #{ca_pem_file.shellescape} -vv https://localhost" do
+      its(:stderr) { should match(/Certificate subject:/) }
+      its(:stderr) { should_not match(/SSL certificate subject doesn't match host/) }
+    end
+  else
+    describe command "curl --cacert #{ca_pem_file.shellescape} -o /dev/null -s -v https://localhost" do
+      its(:exit_status) { should eq 0 }
+      its(:stderr) { should match(/SSL certificate verify ok/) }
+    end
   end
 end
 # rubocop:enable Style/GlobalVars
